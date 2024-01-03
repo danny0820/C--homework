@@ -1,0 +1,91 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    ViewData["Title"] = "HW12";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<style>
+    #chessBoard {
+        width: 400px;
+        height: 400px;
+        border-collapse: collapse;
+    }
+
+    .chessCell {
+        width: 50px;
+        height: 50px;
+        border: 1px solid black;
+        text-align: center;
+        vertical-align: middle;
+        background-color:gray; /* 設置棋盤格的背景顏色為藍色 */
+    }
+
+    .blackPiece, .whitePiece {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+
+    }
+
+    .blackPiece {
+        background-color: black;
+    }
+
+    .whitePiece {
+        background-color:white;
+    }
+</style>
+
+<!-- 棋盤和 JavaScript 代碼保持不變 -->
+
+<table id="chessBoard">
+    @for (int i = 0; i < 8; i++)
+    {
+        <tr>
+            @for (int j = 0; j < 8; j++)
+            {
+                <td id="@($"cell-{i}-{j}")" class="chessCell"></td>
+            }
+        </tr>
+    }
+</table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        initializeBoard();
+
+        document.querySelectorAll('.chessCell').forEach(cell => {
+            cell.addEventListener('click', function () {
+                if (!this.hasChildNodes()) {
+                    let piece = document.createElement('div');
+                    piece.className = 'blackPiece';
+                    this.appendChild(piece);
+                } else {
+                    let piece = this.firstChild;
+                    piece.className = (piece.className === 'blackPiece') ? 'whitePiece' : 'blackPiece';
+                }
+            });
+        });
+    });
+
+    function initializeBoard() {
+        // 初始化中央四格棋子的位置與顏色
+        let centerPieces = [
+            { row: 3, col: 3, color: 'whitePiece' },
+            { row: 3, col: 4, color: 'blackPiece' },
+            { row: 4, col: 3, color: 'blackPiece' },
+            { row: 4, col: 4, color: 'whitePiece' }
+        ];
+
+        centerPieces.forEach(p => {
+            let cell = document.getElementById(`cell-${p.row}-${p.col}`);
+            let piece = document.createElement('div');
+            piece.className = p.color;
+            cell.appendChild(piece);
+        });
+    }
+</script>
