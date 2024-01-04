@@ -1,0 +1,7 @@
+C:\Users\ccc36\OneDrive\文件\視窗程式作業\HW11\HW11\obj\Release\net6.0\PubTmp\Out\HW11.exe
+C:\Users\ccc36\OneDrive\文件\視窗程式作業\HW11\HW11\obj\Release\net6.0\PubTmp\Out\appsettings.Development.json
+C:\Users\ccc36\OneDrive\文件\視窗程式作業\HW11\HW11\obj\Release\net6.0\PubTmp\Out\appsettings.json
+C:\Users\ccc36\OneDrive\文件\視窗程式作業\HW11\HW11\obj\Release\net6.0\PubTmp\Out\HW11.dll
+C:\Users\ccc36\OneDrive\文件\視窗程式作業\HW11\HW11\obj\Release\net6.0\PubTmp\Out\HW11.deps.json
+C:\Users\ccc36\OneDrive\文件\視窗程式作業\HW11\HW11\obj\Release\net6.0\PubTmp\Out\HW11.runtimeconfig.json
+C:\Users\ccc36\OneDrive\文件\視窗程式作業\HW11\HW11\obj\Release\net6.0\PubTmp\Out\HW11.pdb
