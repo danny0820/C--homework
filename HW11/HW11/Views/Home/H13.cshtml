@@ -1,0 +1,241 @@
+﻿@{
+    ViewData["Title"] = "HW13";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table id="chessBoard">
+    @for (int i = 0; i < 8; i++)
+    {
+        <tr>
+            @for (int j = 0; j < 8; j++)
+            {
+                <td id="@($"cell-{i}-{j}")" class="chessCell" data-x="@i" data-y="@j"></td>
+            }
+        </tr>
+    }
+</table>
+<div id="scoreboard">
+    <p>黑棋数目: <span id="black-count">2</span></p>
+    <p>白棋数目: <span id="white-count">2</span></p>
+</div>
+<style>
+    #chessBoard {
+        width: 400px;
+        height: 400px;
+        border-collapse: collapse;
+    }
+
+    .chessCell {
+        width: 50px;
+        height: 50px;
+        border: 1px solid black;
+        text-align: center;
+        vertical-align: middle;
+        background-color: gray; /* 設置棋盤格的背景顏色為藍色 */
+    }
+
+    .blackPiece, .whitePiece {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .blackPiece {
+        background-color: black;
+    }
+
+    .whitePiece {
+        background-color: white;
+    }
+
+    .highlight {
+        border: 6px solid red; /* 紅色邊框標記可下位置 */
+    }
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        initializeBoard();
+        updateBoardForPlayer('blackPiece'); // 在初始化后显示黑棋可下的位置
+
+        document.querySelectorAll('.chessCell').forEach(cell => {
+            cell.addEventListener('click', handleCellClick);
+        });
+    });
+
+    function initializeBoard() {
+        // 初始化中央四格棋子的位置與顏色
+        let centerPieces = [
+            { row: 3, col: 3, color: 'whitePiece' },
+            { row: 3, col: 4, color: 'blackPiece' },
+            { row: 4, col: 3, color: 'blackPiece' },
+            { row: 4, col: 4, color: 'whitePiece' }
+        ];
+
+        centerPieces.forEach(p => {
+            let cell = document.getElementById(`cell-${p.row}-${p.col}`);
+            let piece = document.createElement('div');
+            piece.className = p.color;
+            cell.appendChild(piece);
+        });
+
+        // 這裡可以添加更多初始化代碼，例如設置玩家和電腦的棋子數量
+    }
+    function placePiece(cell, pieceColor) {
+        let piece = document.createElement('div');
+        piece.className = pieceColor;
+        cell.appendChild(piece);
+    }
+
+    function handleCellClick(event) {
+        let cell = event.currentTarget;
+        let x = parseInt(cell.dataset.x);
+        let y = parseInt(cell.dataset.y);
+
+        if (isValidMove(x, y, 'blackPiece')) {
+            placePiece(cell, 'blackPiece');
+            flipPieces(x, y, 'blackPiece');
+            updateBoardForPlayer('whitePiece');
+            // 讓電腦（白棋）下棋
+            computerMove();
+            updateBoardForPlayer('blackPiece');
+
+        }
+        updateScore();
+    }
+
+    function isValidMove(x, y, pieceColor) {
+        if (document.getElementById(`cell-${x}-${y}`).hasChildNodes()) {
+            return false; // 已有棋子的格子不允許放置
+        }
+
+        let opponentColor = (pieceColor === 'blackPiece') ? 'whitePiece' : 'blackPiece';
+        let directions = [
+            { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
+            { dx: -1, dy: 0 }, /* { dx: 0, dy: 0 }, */ { dx: 1, dy: 0 },
+            { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
+        ];
+
+        for (let dir of directions) {
+            let nx = x + dir.dx;
+            let ny = y + dir.dy;
+            let foundOpponent = false;
+
+            while (nx >= 0 && nx < 8 && ny >= 0 && ny < 8) {
+                let cell = document.getElementById(`cell-${nx}-${ny}`);
+                if (!cell.hasChildNodes()) break;
+
+                let child = cell.firstChild;
+                if (child.className === opponentColor) {
+                    foundOpponent = true;
+                    nx += dir.dx;
+                    ny += dir.dy;
+                } else if (child.className === pieceColor && foundOpponent) {
+                    return true; // 找到至少一個可以翻轉的方向
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    function flipPieces(x, y, pieceColor) {
+        let opponentColor = (pieceColor === 'blackPiece') ? 'whitePiece' : 'blackPiece';
+        let directions = [
+            { dx: -1, dy: -1 }, { dx: 0, dy: -1 }, { dx: 1, dy: -1 },
+            { dx: -1, dy: 0 }, /* { dx: 0, dy: 0 }, */ { dx: 1, dy: 0 },
+            { dx: -1, dy: 1 }, { dx: 0, dy: 1 }, { dx: 1, dy: 1 }
+        ];
+
+        for (let dir of directions) {
+            let cellsToFlip = [];
+            let nx = x + dir.dx;
+            let ny = y + dir.dy;
+
+            while (nx >= 0 && nx < 8 && ny >= 0 && ny < 8) {
+                let cell = document.getElementById(`cell-${nx}-${ny}`);
+                if (!cell.hasChildNodes()) break;
+
+                let child = cell.firstChild;
+                if (child.className === opponentColor) {
+                    cellsToFlip.push(cell);
+                    nx += dir.dx;
+                    ny += dir.dy;
+                } else if (child.className === pieceColor) {
+                    if (cellsToFlip.length > 0) {
+                        // 翻轉這些棋子
+                        for (let flipCell of cellsToFlip) {
+                            let flipPiece = flipCell.firstChild;
+                            flipPiece.className = pieceColor;
+                        }
+                    }
+                    break;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    function updateBoardForPlayer(playerColor) {
+        // 移除先前的高亮显示
+        document.querySelectorAll('.chessCell').forEach(cell => {
+            cell.classList.remove('highlight');
+        });
+
+        // 尋找並高亮所有可行的棋步
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                if (isValidMove(i, j, playerColor)) {
+                    let cell = document.getElementById(`cell-${i}-${j}`);
+                    cell.classList.add('highlight');
+                }
+            }
+        }
+    }
+
+    function computerMove() {
+        let possibleMoves = [];
+
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                if (isValidMove(i, j, 'whitePiece')) {
+                    possibleMoves.push({ x: i, y: j });
+                }
+            }
+        }
+
+        if (possibleMoves.length > 0) {
+            let move = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+            let cell = document.getElementById(`cell-${move.x}-${move.y}`);
+            placePiece(cell, 'whitePiece');
+            flipPieces(move.x, move.y, 'whitePiece');
+        }
+        updateBoardForPlayer('blackPiece');
+        updateScore();
+
+    }
+    function updateScore() {
+        let blackCount = 0;
+        let whiteCount = 0;
+
+        document.querySelectorAll('.chessCell').forEach(cell => {
+            if (cell.firstChild) {
+                if (cell.firstChild.className === 'blackPiece') {
+                    blackCount++;
+                } else if (cell.firstChild.className === 'whitePiece') {
+                    whiteCount++;
+                }
+            }
+        });
+
+        document.getElementById('black-count').textContent = blackCount;
+        document.getElementById('white-count').textContent = whiteCount;
+    }
+
+
+
+</script>

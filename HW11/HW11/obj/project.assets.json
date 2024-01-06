@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ccc36\\OneDrive\\文件\\視窗程式作業\\HW11\\HW11\\HW11.csproj",
+      "projectUniqueName": "C:\\Users\\ccc36\\OneDrive\\文件\\GitHub\\c-sharp-homework\\HW11\\HW11\\HW11.csproj",
       "projectName": "HW11",
-      "projectPath": "C:\\Users\\ccc36\\OneDrive\\文件\\視窗程式作業\\HW11\\HW11\\HW11.csproj",
+      "projectPath": "C:\\Users\\ccc36\\OneDrive\\文件\\GitHub\\c-sharp-homework\\HW11\\HW11\\HW11.csproj",
       "packagesPath": "C:\\Users\\ccc36\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ccc36\\OneDrive\\文件\\視窗程式作業\\HW11\\HW11\\obj\\",
+      "outputPath": "C:\\Users\\ccc36\\OneDrive\\文件\\GitHub\\c-sharp-homework\\HW11\\HW11\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ccc36\\AppData\\Roaming\\NuGet\\NuGet.Config",
